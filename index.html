@@ -140,6 +140,17 @@
             interactions: ol.interaction.defaults()
         });
 
+        geomap_Setting();
+    }
+    function geomap_Setting(){
+ 
+        // zoom slider の追加
+//        map.addControl(new ol.control.ZoomSlider());
+        // 中心の指定。view に対して指定。transform を忘れないこと。
+        view.setCenter(ol.proj.transform([138.731388, 35.362222], "EPSG:4326", "EPSG:3857"));
+        // zoom の指定。view に対して指定する。
+        view.setZoom(initZoom);
+
     }
 </script>
 </body>
