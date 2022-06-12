@@ -77,6 +77,8 @@
         var lineColorBLUE3 = '#008080'; // treal
         var lineColorBLUE4 = '#0000ff'; // blue
 
+        var xydata = "0,138.949664,37.860869,138.949621,37.860813,138.949690,37.860781,138.949832,37.860814,138.949947,37.861063,138.949800,37.861253,138.949834,37.861267,138.949780,37.861284,138.949895,37.861311,138.949753,37.861403,138.949224,37.861873,138.948509,37.862516,138.947788,37.863168,138.947208,37.863719,138.947074,37.863907,138.947278,37.864063,138.947290,37.864062,138.947307,37.864062,138.947317,37.864068,138.947298,37.864066,138.947286,37.864101*4,4,4,4,3,4,4,3,4,4,4,4,4,3,3,3,2,2,2,3,2,2";
+
     function init_map(){
         view = new ol.View({ projection: "EPSG:3857",
             zoom: initZoom,
@@ -141,6 +143,7 @@
         });
 
         geomap_Setting();
+        drawLine_phone(xydata);
     }
     function geomap_Setting(){
  
@@ -152,6 +155,130 @@
         view.setZoom(initZoom);
 
     }
+
+    function drawLine_phone(xy) {
+    // 経路線用の vector データを作る
+        var stData = xy.split("*");
+        var zahyou = stData[0].split(",");
+        var phoneStatus = stData[1].split(",");
+
+
+        for ( var i = 0; i < Math.floor(zahyou.length/2); i++){
+            coordArrayPHONE.push([parseFloat(zahyou[i*2+1]), parseFloat(zahyou[i*2+2])]);
+        }
+        if (coordArrayPHONE.length == 1){
+            view.setCenter(ol.proj.transform([parseFloat(zahyou[1]), parseFloat(zahyou[2])], "EPSG:4326", "EPSG:3857"));
+        }
+        if (coordArrayPHONE.length > 1) {
+            lineStrArrayPHONE0.length = 0;  // 経路線用の配列を一度クリア（これをしないと変に画像が残る
+            lineStrArrayPHONE1.length = 0;  // 経路線用の配列を一度クリア（これをしないと変に画像が残る
+            lineStrArrayPHONE2.length = 0;  // 経路線用の配列を一度クリア（これをしないと変に画像が残る
+            lineStrArrayPHONE3.length = 0;  // 経路線用の配列を一度クリア（これをしないと変に画像が残る
+            lineStrArrayPHONE4.length = 0;  // 経路線用の配列を一度クリア（これをしないと変に画像が残る
+            for (i=0; i<(coordArrayPHONE.length-1); i++) {
+                switch (phoneStatus[i+1]){
+                case '0':
+                    lineStrArrayPHONE0.push([coordArrayPHONE[i], coordArrayPHONE[i+1]]);
+                    break;
+                case '1':
+                    lineStrArrayPHONE1.push([coordArrayPHONE[i], coordArrayPHONE[i+1]]);
+                    break;
+                case '2':
+                    lineStrArrayPHONE2.push([coordArrayPHONE[i], coordArrayPHONE[i+1]]);
+                    break;
+                case '3':
+                    lineStrArrayPHONE3.push([coordArrayPHONE[i], coordArrayPHONE[i+1]]);
+                    break;
+                case '4':
+                    lineStrArrayPHONE4.push([coordArrayPHONE[i], coordArrayPHONE[i+1]]);
+                    break;
+                }
+            }
+
+            if (lineStrArrayPHONE0.length > 0){
+                lineStringsPHONE0.setCoordinates(lineStrArrayPHONE0);
+                vectorFeaturePHONE0 = new ol.Feature(lineStringsPHONE0.transform('EPSG:4326', 'EPSG:3857'));
+
+                vectorSourcePHONE0  = new ol.source.Vector({ features: [vectorFeaturePHONE0] }); // vector layer 用のソースの作成
+                // 経路用の vector layer の作成
+                lineVectorPHONE0 = new ol.layer.Vector({
+                    source: vectorSourcePHONE0,
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({ color: lineColorBLUE0, width: 4 })
+                    })
+                });
+                // vector layer の追加
+                map.addLayer(lineVectorPHONE0);
+            }
+
+            if (lineStrArrayPHONE1.length > 0){
+                lineStringsPHONE1.setCoordinates(lineStrArrayPHONE1);
+                vectorFeaturePHONE1 = new ol.Feature(lineStringsPHONE1.transform('EPSG:4326', 'EPSG:3857'));
+
+                vectorSourcePHONE1  = new ol.source.Vector({ features: [vectorFeaturePHONE1] }); // vector layer 用のソースの作成
+                // 経路用の vector layer の作成
+                lineVectorPHONE1 = new ol.layer.Vector({
+                    source: vectorSourcePHONE1,
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({ color: lineColorBLUE1, width: 4 })
+                    })
+                });
+                // vector layer の追加
+                map.addLayer(lineVectorPHONE1);
+            }
+
+            if (lineStrArrayPHONE2.length > 0){
+                lineStringsPHONE2.setCoordinates(lineStrArrayPHONE2);
+                vectorFeaturePHONE2 = new ol.Feature(lineStringsPHONE2.transform('EPSG:4326', 'EPSG:3857'));
+
+                vectorSourcePHONE2  = new ol.source.Vector({ features: [vectorFeaturePHONE2] }); // vector layer 用のソースの作成
+                // 経路用の vector layer の作成
+                lineVectorPHONE2 = new ol.layer.Vector({
+                    source: vectorSourcePHONE2,
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({ color: lineColorBLUE2, width: 6 })
+                    })
+                });
+                // vector layer の追加
+                map.addLayer(lineVectorPHONE2);
+            }
+
+            if (lineStrArrayPHONE3.length > 0){
+                lineStringsPHONE3.setCoordinates(lineStrArrayPHONE3);
+                vectorFeaturePHONE3 = new ol.Feature(lineStringsPHONE3.transform('EPSG:4326', 'EPSG:3857'));
+
+                vectorSourcePHONE3  = new ol.source.Vector({ features: [vectorFeaturePHONE3] }); // vector layer 用のソースの作成
+                // 経路用の vector layer の作成
+                lineVectorPHONE3 = new ol.layer.Vector({
+                    source: vectorSourcePHONE3,
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({ color: lineColorBLUE3, width: 8 })
+                    })
+                });
+                // vector layer の追加
+                map.addLayer(lineVectorPHONE3);
+            }
+
+            if (lineStrArrayPHONE4.length > 0){
+                lineStringsPHONE4.setCoordinates(lineStrArrayPHONE4);
+                vectorFeaturePHONE4 = new ol.Feature(lineStringsPHONE4.transform('EPSG:4326', 'EPSG:3857'));
+
+                vectorSourcePHONE4  = new ol.source.Vector({ features: [vectorFeaturePHONE4] }); // vector layer 用のソースの作成
+                // 経路用の vector layer の作成
+                lineVectorPHONE4 = new ol.layer.Vector({
+                    source: vectorSourcePHONE4,
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({ color: lineColorBLUE4, width: 10 })
+                    })
+                });
+                // vector layer の追加
+                map.addLayer(lineVectorPHONE4);
+            }
+
+        }
+    }
+
+
 </script>
 </body>
 </html>
